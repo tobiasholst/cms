@@ -150,7 +150,10 @@ class Statamic
             return false;
         }
 
-        return starts_with(request()->path(), config('statamic.cp.route'));
+        return Str::startsWith(
+            request()->getUri(),
+            Site::default()->absoluteUrl().'/'.config('statamic.cp.route').'/'
+        );
     }
 
     public static function cpRoute($route, $params = [])
