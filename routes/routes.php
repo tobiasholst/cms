@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Statamic\API\Middleware\Cache;
+use Statamic\Facades\Site;
 use Statamic\Http\Middleware\API\SwapExceptionHandler as SwapAPIExceptionHandler;
 use Statamic\Http\Middleware\CP\SwapExceptionHandler as SwapCpExceptionHandler;
 use Statamic\Http\Middleware\RequireStatamicPro;
@@ -21,7 +22,10 @@ if (config('statamic.api.enabled')) {
 }
 
 if (config('statamic.cp.enabled')) {
-    Route::middleware(SwapCpExceptionHandler::class)->group(function () {
+    Route::group([
+        'domain' => Site::default()->absoluteUrl(),
+        'middleware' => SwapCpExceptionHandler::class,
+    ], function () {
         Route::middleware('statamic.cp')
             ->name('statamic.cp.')
             ->prefix(config('statamic.cp.route'))
